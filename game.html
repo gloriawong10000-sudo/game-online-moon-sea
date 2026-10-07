@@ -1773,6 +1773,25 @@ function registerKill(killer, victim) {
 function updatePlayers(dt) { for (const p of players) updatePlayer(p, dt); resolvePC(); }
 
 function updatePlayer(p, dt) {
+  // 主机端：直接应用客户端上报的位置
+  if (Net.role === 'host' && Net.active && p.id !== Net.myId && p._netIn) {
+    const i = p._netIn;
+    if (typeof i.myX === 'number') {
+      p.x = i.myX; p.y = i.myY;
+      p.facing = i.myFacing || p.facing;
+      p.hp = i.myHp; p.alive = i.myAlive;
+      p.dashing = i.myDashing || 0;
+      p.charging = i.myCharging || false;
+      p.chargeTime = i.myChargeTime || 0;
+      p.shield = i.myShield || false;
+      p.heavy = i.myHeavy ? 9 : 0;
+      p.speedBoost = i.mySpeed ? 9 : 0;
+      p.finished = i.myFinished || false;
+      p.finishOrder = i.myFinishOrder || 0;
+      p.finishTime = i.myFinishTime || 0;
+    }
+    return;
+  }
   // ★ 客户端：远程玩家平滑插值
   if (Net.role === 'client' && Net.active && p.id !== Net.myId) {
     if (p._targetX !== undefined) {
@@ -2516,13 +2535,18 @@ function update(dt) {
         const my = players.find(x => x.id === Net.myId);
         if (my) {
           const m = KEYMAP[my.id];
-          Net.sendIn({
+                    Net.sendIn({
             left: m.left.some(k => keys[k]) || (my.id === 0 && touchEnabled && touchKeys.left),
             right: m.right.some(k => keys[k]) || (my.id === 0 && touchEnabled && touchKeys.right),
             jumpP: m.jump.some(k => pressed[k]) || (my.id === 0 && touchEnabled && touchPressed.jump),
             jumpHeld: m.jump.some(k => keys[k]) || (my.id === 0 && touchEnabled && touchKeys.jump),
             dashP: m.dash.some(k => pressed[k]) || (my.id === 0 && touchEnabled && touchPressed.dash),
-            attackP: m.attack.some(k => pressed[k]) || (my.id === 0 && touchEnabled && touchPressed.attack)
+            attackP: m.attack.some(k => pressed[k]) || (my.id === 0 && touchEnabled && touchPressed.attack),
+            myX: my.x, myY: my.y, myFacing: my.facing,
+            myHp: my.hp, myAlive: my.alive, myDashing: my.dashing,
+            myCharging: my.charging, myChargeTime: my.chargeTime,
+            myShield: my.shield, myHeavy: my.heavy > 0, mySpeed: my.speedBoost > 0,
+            myFinished: my.finished, myFinishOrder: my.finishOrder, myFinishTime: my.finishTime
           });
         }
       }
