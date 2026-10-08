@@ -1,4 +1,4 @@
-PEER_HOST<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -1792,9 +1792,14 @@ function updatePlayer(p, dt) {
       p.shield = i.myShield || false;
       p.heavy = i.myHeavy ? 9 : 0;
       p.speedBoost = i.mySpeed ? 9 : 0;
-      p.finished = i.myFinished || false;
-      p.finishOrder = i.myFinishOrder || 0;
-      p.finishTime = i.myFinishTime || 0;
+      if (gameMode === 'race' && !p.finished && level.goal && rect(p, level.goal)) {
+        p.finished = true;
+        finishCount++;
+        p.finishOrder = finishCount;
+        p.finishTime = levelTime;
+        spawnP(p.x + p.w/2, p.y + p.h/2, 36, '#ffd54f', 360, 1.1, 400);
+        shake = Math.max(shake, 6);
+      }
     }
     return;
   }
@@ -1938,7 +1943,7 @@ function updatePlayer(p, dt) {
       }
     }
   }
-  if (gameMode === 'race' && !p.finished && level.goal && rect(p, level.goal)) {
+  if (Net.role !== 'client' && gameMode === 'race' && !p.finished && level.goal && rect(p, level.goal)) {
     p.finished = true; finishCount++;
     p.finishOrder = finishCount; p.finishTime = levelTime;
     if (nPlayers === 1) p.score += 100;
@@ -2578,7 +2583,7 @@ function update(dt) {
   } else if (state === 'levelend') {
     updateParticles(dt); updateBullets(dt); updateHaz(dt); updateCamera(dt);
     transT -= dt;
-    if (transT <= 0) {
+       if (transT <= 0 && !(Net.role === 'client' && Net.active)) {
       li++;
       if (li >= totalLv) {
         state = 'gameover';
