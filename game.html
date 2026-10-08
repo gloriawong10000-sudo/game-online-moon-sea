@@ -1246,7 +1246,7 @@ const Net = {
     if (!force && now - this.lastBC < 50) return;
     this.lastBC = now;
     const sd = {
-      mode:gameMode, li, lt:Math.round(levelTime*10)/10,
+      mode:gameMode, li, lt:Math.round(levelTime*10)/10, hostState: state,
       ps: players.map(p => ({
         id:p.id, x:Math.round(p.x), y:Math.round(p.y),
         hp:p.hp, maxHp:p.maxHp, alive:p.alive, finished:p.finished,
@@ -1322,7 +1322,13 @@ function applyInterpolatedState() {
   const sb = b.data;
   if (sb.mode) gameMode = sb.mode;
   if (sb.ms) modeState = Object.assign(modeState, sb.ms);
-  li = sb.li; levelTime = sb.lt;
+  const prevLi = li;
+li = sb.li; levelTime = sb.lt;
+if (Net.role === 'client' && Net.active && li !== prevLi) {
+  loadLevel(li);
+  state = 'playing';
+  transT = 0;
+}
 
   const sa = a.data;
   for (const pb of sb.ps) {
@@ -2552,7 +2558,7 @@ function update(dt) {
       }
     }
 
-    if (gameMode === 'race' && players.length > 0 && players.every(p => p.finished)) {
+   if (Net.role !== 'client' && gameMode === 'race' && players.length > 0 && players.every(p => p.finished)) {
       state = 'levelend'; transT = 2.4; S.clear();
       const mvp = calculateMVP();
       if (mvp) {
