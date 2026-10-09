@@ -85,6 +85,36 @@ h1{font-size:clamp(20px,3.6vw,34px);letter-spacing:4px;font-weight:900;backgroun
 #achievementToast .at-desc{font-size:11px;color:#8ba3c0;margin-top:2px}
 #roomBanner{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:15;background:rgba(15,36,21,.92);border:2px solid #2a5232;border-radius:9px;padding:6px 16px;font-size:12px;color:#a5d6a7;display:none;letter-spacing:1px}
 #roomBanner b{color:#4fc3f7;letter-spacing:3px}
+
+/* ═══ 玩法说明弹窗 ═══ */
+#helpModal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:rgba(2,4,10,.88);backdrop-filter:blur(6px);padding:14px}
+.helpPanel{width:min(780px,96vw);max-height:88vh;display:flex;flex-direction:column;background:rgba(16,24,36,.98);border:2px solid #2b3b52;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.75)}
+.helpHead{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #1e2b3d;flex-wrap:wrap}
+.helpTabs{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.helpTab{padding:6px 12px;border-radius:7px;border:2px solid #22303f;background:#141d2b;color:#8ba3c0;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.helpTab:hover{border-color:#4fc3f7;color:#c7d8ec}
+.helpTab.active{border-color:#4fc3f7;background:#0e2233;color:#7fdcff;box-shadow:0 0 10px rgba(79,195,247,.35)}
+#helpClose{width:32px;height:32px;border-radius:8px;border:2px solid #2b3b52;background:#141d2b;color:#8ba3c0;cursor:pointer;font-size:14px;font-family:inherit;flex-shrink:0}
+#helpClose:hover{border-color:#ff5252;color:#ff8a80}
+.helpBody{padding:14px 18px;overflow-y:auto;font-size:13px;line-height:1.75;color:#b9cbe0;-webkit-overflow-scrolling:touch}
+.helpBody h3{color:#7fdcff;font-size:14px;margin:14px 0 6px;letter-spacing:1px}
+.helpBody h3:first-child{margin-top:0}
+.helpBody p{margin:4px 0}
+.helpTable{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.helpTable th,.helpTable td{border:1px solid #24344a;padding:5px 8px;text-align:center}
+.helpTable th{background:#16202e;color:#8fd3ff;font-weight:700}
+.helpTable td:first-child{color:#9fb4cf;text-align:left}
+.helpCard{background:#0e1622;border:1px solid #1f2c3e;border-radius:9px;padding:9px 12px;margin:6px 0}
+.helpCard b{color:#e8f1ff}
+.kbd{display:inline-block;padding:1px 6px;border-radius:4px;background:#1b2536;border:1px solid #2c3d55;color:#9ec8ee;font-size:11px;font-weight:700}
+.setRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;background:#0e1622;border:1px solid #1f2c3e;border-radius:9px;margin:6px 0}
+.setRow .st{font-size:12px;font-weight:700;color:#dbe8f7}
+.setRow .sd{font-size:11px;color:#7d90ab;margin-top:2px}
+.switch{width:46px;height:26px;border-radius:14px;background:#2b3b52;border:none;position:relative;cursor:pointer;transition:.2s;flex-shrink:0}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#8ba3c0;transition:.2s}
+.switch.on{background:#0e2233;box-shadow:0 0 10px rgba(79,195,247,.4)}
+.switch.on::after{left:23px;background:#4fc3f7}
+#helpFoot{padding:8px 16px;border-top:1px solid #1e2b3d;font-size:11px;color:#5f7691;text-align:center}
 </style>
 </head>
 <body>
@@ -93,7 +123,7 @@ h1{font-size:clamp(20px,3.6vw,34px);letter-spacing:4px;font-weight:900;backgroun
 
 <div id="menu">
   <h1>互坑大冒险</h1>
-  <div class="sub">终极融合版 · 7 模式 · 8 角色 · 8 技能 · P2P 联机</div>
+  <div class="sub">终极融合版 · 8 角色 · 8 技能 · 天气 · 随机事件 · 排行榜</div>
 
   <div class="row"><span class="lb">模式</span>
     <div class="btns" id="modeBtns">
@@ -152,6 +182,8 @@ h1{font-size:clamp(20px,3.6vw,34px);letter-spacing:4px;font-weight:900;backgroun
     <button id="musicToggle" class="smallBtn">🎵 音乐</button>
     <button id="touchToggle" class="smallBtn">📱 触屏</button>
     <button id="statsBtn" class="smallBtn">📊 战绩</button>
+    <button id="boardBtn" class="smallBtn">🏆 排行榜</button>
+    <button id="helpBtn" class="smallBtn">❓ 玩法说明</button>
   </div>
 
   <div id="quickStats">最佳：<b>--</b> · 通关：<b>0</b> 次 · 成就：<b>0</b>/<span id="totalAchCount">0</span></div>
@@ -162,7 +194,7 @@ h1{font-size:clamp(20px,3.6vw,34px);letter-spacing:4px;font-weight:900;backgroun
     <div><b>玩家3</b> <span class="pk">J</span><span class="pk">L</span>移动 <span class="pk">I</span>蓄力跳 <span class="pk">K</span>冲刺 <span class="pk atk">U</span>射击 <span class="pk sk">H</span>技能</div>
     <div><b>玩家4</b> <span class="pk">4</span><span class="pk">6</span>移动 <span class="pk">8</span>蓄力跳 <span class="pk">5</span>冲刺 <span class="pk atk">7</span>射击 <span class="pk sk">+</span>技能</div>
   </div>
-  <div style="font-size:10px;color:#5f7691;margin-top:2px">游戏中按 <span class="pk">T</span> 聊天 · <span class="pk">Esc</span> 暂停 · <span class="pk">1-4</span> 表情 · <span class="pk">Q</span> 标记</div>
+  <div style="font-size:10px;color:#5f7691;margin-top:2px">游戏中按 <span class="pk">T</span> 聊天 · <span class="pk">Esc</span> 暂停 · <span class="pk">1-4</span> 表情 · <span class="pk">Q</span> 标记 · 点右上角 <b style="color:#8fd3ff">❓ 玩法说明</b> 看完整规则</div>
 </div>
 
 <div id="gameChatLog"></div>
@@ -171,6 +203,7 @@ h1{font-size:clamp(20px,3.6vw,34px);letter-spacing:4px;font-weight:900;backgroun
 <div id="pauseMenu"><div class="pausePanel">
   <h2>暂 停</h2>
   <button id="resumeBtn">继 续 游 戏</button>
+  <button id="retryBtn">重 开 本 关</button>
   <button id="restartBtn">重 新 开 始</button>
   <button id="quitBtn">返 回 主 菜 单</button>
 </div></div>
@@ -190,6 +223,24 @@ h1{font-size:clamp(20px,3.6vw,34px);letter-spacing:4px;font-weight:900;backgroun
   <div class="at-desc" id="atDesc"></div>
 </div>
 
+<!-- ═══ 玩法说明弹窗 ═══ -->
+<div id="helpModal"><div class="helpPanel">
+  <div class="helpHead">
+    <div class="helpTabs">
+      <button class="helpTab active" data-tab="ctrl">🎮 操作</button>
+      <button class="helpTab" data-tab="mode">🎯 模式</button>
+      <button class="helpTab" data-tab="char">🧩 角色</button>
+      <button class="helpTab" data-tab="world">🌦️ 道具事件</button>
+      <button class="helpTab" data-tab="rule">⚙️ 规则</button>
+      <button class="helpTab" data-tab="ach">🏆 成就</button>
+      <button class="helpTab" data-tab="set">🔧 设置</button>
+    </div>
+    <button id="helpClose">✕</button>
+  </div>
+  <div class="helpBody" id="helpBody"></div>
+  <div id="helpFoot">游戏中按 <span class="kbd">T</span> 聊天 · <span class="kbd">Esc</span> 暂停 · <span class="kbd">1~4</span> 表情 · <span class="kbd">Q</span> 标记 · <span class="kbd">R</span> 结算返回</div>
+</div></div>
+
 <script>
 "use strict";
 const PEER_HOST = location.hostname;
@@ -198,7 +249,7 @@ const CONNECT_TIMEOUT = 20000;
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const rand = (a,b) => a + Math.random() * (b - a);
 
-/* ═══ 音效引擎 ═══ */
+/* ═══ 音效 ═══ */
 const S = {
   ctx:null, master:null, sfx:null, music:null, vol:0.4, musicOn:true,
   init() {
@@ -253,6 +304,8 @@ const S = {
   skill() { this.tone(660,0.1,'sawtooth',0.2,1200); this.noise(0.1,0.15,3000); },
   emote() { this.tone(880,0.06,'sine',0.15); this.tone(1200,0.1,'sine',0.15,null,0.04); },
   mark() { this.tone(1400,0.05,'sine',0.15); this.tone(1800,0.08,'sine',0.15,null,0.03); },
+  event() { [400,600,800].forEach((f,i)=>this.tone(f,0.15,'sawtooth',0.2,null,i*0.08)); },
+  rage() { [200,400,600].forEach((f,i)=>this.tone(f,0.2,'sawtooth',0.25,null,i*0.06)); },
   streakDouble() { this.tone(659,0.1,'square',0.22); this.tone(880,0.2,'square',0.28,null,0.1); },
   streakTriple() { [659,880].forEach((f,i)=>this.tone(f,0.08,'square',0.22,null,i*0.08)); this.tone(1047,0.25,'square',0.3,null,0.16); },
   streakQuadra() { [659,784,880,1047].forEach((f,i)=>this.tone(f,0.1,'square',0.22,null,i*0.07)); this.tone(1319,0.35,'sawtooth',0.3,null,0.32); },
@@ -746,6 +799,18 @@ function makeRaceLevel(i) {
       pl.w = Math.max(60, Math.round(pl.w * PW));
     }
   }
+  // ★ 新增：道具生成
+  if (i >= 2) {
+    const types = ['shield','heavy','speed'];
+    const itemN = Math.min(4, 1 + Math.floor(rng(9000) * 3));
+    for (let k = 0; k < itemN; k++) {
+      items.push({
+        type: types[Math.floor(rng(9100 + k) * 3)],
+        x: 800 + rng(9200 + k) * 3400,
+        y: 780 + rng(9300 + k) * 160
+      });
+    }
+  }
   platforms.push(GF(4650, 350));
   return { name:`第 ${i+1} 关`, spawn:{ x:80, y:900, spread:160 }, platforms, hazards, items, goal:{ x:4800, y:930, w:110, h:120 } };
 }
@@ -761,6 +826,28 @@ function makeArena() {
   ];
   return { name:'竞技场', spawn:{ x:200, y:900, spread:WW-500 }, platforms:plats, hazards:[], items:[], goal:null };
 }
+
+/* ═══ 本地排行榜 ═══ */
+const Leaderboard = {
+  KEY: 'bomb_leaderboard_v1',
+  data: [],
+  load() { try { const raw = localStorage.getItem(this.KEY); if (raw) this.data = JSON.parse(raw) || []; } catch(e) { this.data = []; } },
+  save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.data.slice(0, 10))); } catch(e) {} },
+  add(entry) {
+    this.data.push(entry);
+    this.data.sort((a, b) => b.score - a.score);
+    this.data = this.data.slice(0, 10);
+    this.save();
+  },
+  render() {
+    if (this.data.length === 0) return ['暂无记录'];
+    return this.data.map((e, i) => {
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
+      return `${medal} ${i+1}. ${e.name}  ${e.score} 分  (${e.mode} · ${e.diff})`;
+    });
+  }
+};
+Leaderboard.load();
 
 /* ═══ 成就 ═══ */
 const Achievements = {
@@ -778,10 +865,12 @@ const Achievements = {
     { id:'marathon', name:'马拉松', desc:'总计游戏超过 30 分钟' },
     { id:'emoter', name:'社交达人', desc:'发送 10 次表情' },
     { id:'combo10', name:'连击大师', desc:'达到 10 连击' },
-    { id:'skillmaster', name:'技能大师', desc:'累计使用技能 30 次' }
+    { id:'skillmaster', name:'技能大师', desc:'累计使用技能 30 次' },
+    { id:'ragequit', name:'绝地反击', desc:'狂暴模式下击杀 3 次' },
+    { id:'surviveWeather', name:'风霜雨雪', desc:'经历过全部天气' }
   ],
   unlocked: {},
-  stats: { games:0, wins:0, totalTime:0, bestTime:null, usedChars:{}, emoteCount:0, skillCount:0 },
+  stats: { games:0, wins:0, totalTime:0, bestTime:null, usedChars:{}, emoteCount:0, skillCount:0, rageKills:0, weathers:{}, seenWeathers:{} },
   load() { try { const raw = localStorage.getItem('bomb_achievements_v1'); if (raw) { const d = JSON.parse(raw); this.unlocked = d.unlocked || {}; this.stats = Object.assign(this.stats, d.stats || {}); } } catch(e) {} },
   save() { try { localStorage.setItem('bomb_achievements_v1', JSON.stringify({ unlocked:this.unlocked, stats:this.stats })); } catch(e) {} },
   unlock(id) { if (this.unlocked[id]) return; this.unlocked[id] = Date.now(); this.save(); const def = this.defs.find(d => d.id === id); if (def) showAchievementToast(def.name, def.desc); },
@@ -854,6 +943,10 @@ let shake = 0, freeze = 0;
 let killFeed = [], streakPopups = [], screenBanners = [];
 let mvpState = { active:false, timer:0, duration:3.8, player:null, title:'MVP', subTitle:'', stats:null, playedSounds:{} };
 let modeState = {};
+let weather = { type:'clear', timer:0, intensity:1 };
+const WEATHERS = ['clear','clear','clear','rain','snow','fog'];
+let nextEventTime = 15;
+let activeEvent = null;
 let touchEnabled = false;
 const keys = {}, pressed = {};
 const touchKeys = { left:false, right:false, jump:false, dash:false, attack:false, skill:false };
@@ -867,6 +960,212 @@ const KEYMAP = [
   { left:['KeyJ'],      right:['KeyL'],      jump:['KeyI'],     dash:['KeyK'],     attack:['KeyU'],            skill:['KeyH'] },
   { left:['Numpad4'],   right:['Numpad6'],   jump:['Numpad8'],  dash:['Numpad5'],  attack:['Numpad7'],         skill:['NumpadAdd'] }
 ];
+
+/* ═══ 设置 / 最佳记录 ═══ */
+const Settings = {
+  KEY:'bomb_settings_v1',
+  data:{ shake:true, dmgText:true, minimap:true, quality:2 },
+  load(){ try{ const r = localStorage.getItem(this.KEY); if (r) this.data = Object.assign(this.data, JSON.parse(r)); }catch(e){} },
+  save(){ try{ localStorage.setItem(this.KEY, JSON.stringify(this.data)); }catch(e){} }
+};
+Settings.load();
+const QUALITY_MUL = [0.35, 0.7, 1];
+
+const BestTimes = {
+  KEY:'bomb_besttimes_v1',
+  data:{},
+  load(){ try{ const r = localStorage.getItem(this.KEY); if (r) this.data = JSON.parse(r) || {}; }catch(e){ this.data = {}; } },
+  save(){ try{ localStorage.setItem(this.KEY, JSON.stringify(this.data)); }catch(e){} },
+  key(mode, diff, idx){ return `${mode}|${diff}|${idx}`; },
+  get(){ return this.data[this.key(gameMode, diffKey, li)]; },
+  submit(t){
+    const k = this.key(gameMode, diffKey, li);
+    if (this.data[k] === undefined || t < this.data[k]) { this.data[k] = t; this.save(); return true; }
+    return false;
+  }
+};
+BestTimes.load();
+
+/* ═══ 玩法说明弹窗 ═══ */
+function mulDesc(mul) {
+  const parts = [];
+  if (!mul) return '综合型';
+  if (mul.spd)  parts.push(`移速 +${Math.round((mul.spd-1)*100)}%`);
+  if (mul.atk)  parts.push(`伤害 +${Math.round((mul.atk-1)*100)}%`);
+  if (mul.hp)   parts.push(`生命 +${Math.round((mul.hp-1)*100)}%`);
+  if (mul.ratk) parts.push(`射速 +${Math.round((1/mul.ratk-1)*100)}%`);
+  if (mul.jmp)  parts.push(`跳跃 +${Math.round((mul.jmp-1)*100)}%`);
+  if (mul.kb)   parts.push(`抗击退 +${Math.round((1-mul.kb)*100)}%`);
+  if (mul.dsh)  parts.push(`冲刺 +${Math.round((mul.dsh-1)*100)}%`);
+  if (mul.cd)   parts.push(`技能CD -${Math.round((1-mul.cd)*100)}%`);
+  return parts.join(' · ') || '综合型';
+}
+
+const HelpModal = {
+  el:null, body:null, tab:'ctrl',
+  init() {
+    this.el = document.getElementById('helpModal');
+    this.body = document.getElementById('helpBody');
+    document.getElementById('helpClose').onclick = () => this.hide();
+    this.el.addEventListener('click', e => { if (e.target === this.el) this.hide(); });
+    document.querySelectorAll('.helpTab').forEach(b => {
+      b.onclick = () => {
+        document.querySelectorAll('.helpTab').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        this.tab = b.dataset.tab;
+        this.render();
+      };
+    });
+  },
+  show() { this.el.style.display = 'flex'; this.render(); },
+  hide() { this.el.style.display = 'none'; },
+  render() {
+    this.body.innerHTML = this.content(this.tab);
+    if (this.tab === 'set') this.bindSettings();
+    this.body.scrollTop = 0;
+  },
+  bindSettings() {
+    const body = this.body;
+    body.querySelectorAll('[data-set]').forEach(btn => {
+      const k = btn.dataset.set;
+      btn.classList.toggle('on', !!Settings.data[k]);
+      btn.onclick = () => {
+        Settings.data[k] = !Settings.data[k];
+        Settings.save();
+        btn.classList.toggle('on', !!Settings.data[k]);
+      };
+    });
+    body.querySelectorAll('[data-q]').forEach(btn => {
+      const v = +btn.dataset.q;
+      btn.classList.toggle('active', Settings.data.quality === v);
+      btn.onclick = () => {
+        Settings.data.quality = v; Settings.save();
+        body.querySelectorAll('[data-q]').forEach(b => b.classList.toggle('active', +b.dataset.q === v));
+      };
+    });
+    const cb = body.querySelector('#clearBestBtn');
+    if (cb) cb.onclick = () => {
+      if (confirm('确定清除所有最佳时间记录？')) { BestTimes.data = {}; BestTimes.save(); alert('已清除最佳时间记录'); }
+    };
+  },
+  content(tab) {
+    if (tab === 'ctrl') return `
+      <h3>基础操作（每位玩家一套独立按键）</h3>
+      <table class="helpTable">
+        <tr><th>动作</th><th>玩家 1</th><th>玩家 2</th><th>玩家 3</th><th>玩家 4</th></tr>
+        <tr><td>左右移动</td><td><span class="kbd">A</span> <span class="kbd">D</span></td><td><span class="kbd">←</span> <span class="kbd">→</span></td><td><span class="kbd">J</span> <span class="kbd">L</span></td><td><span class="kbd">4</span> <span class="kbd">6</span></td></tr>
+        <tr><td>蓄力跳</td><td><span class="kbd">W</span></td><td><span class="kbd">↑</span></td><td><span class="kbd">I</span></td><td><span class="kbd">8</span></td></tr>
+        <tr><td>冲刺</td><td><span class="kbd">S</span></td><td><span class="kbd">↓</span></td><td><span class="kbd">K</span></td><td><span class="kbd">5</span></td></tr>
+        <tr><td>射击</td><td><span class="kbd">F</span></td><td><span class="kbd">/</span> <span class="kbd">.</span></td><td><span class="kbd">U</span></td><td><span class="kbd">7</span></td></tr>
+        <tr><td>释放技能</td><td><span class="kbd">E</span></td><td><span class="kbd">右Shift</span></td><td><span class="kbd">H</span></td><td><span class="kbd">+</span></td></tr>
+      </table>
+      <h3>全局按键</h3>
+      <div class="helpCard"><span class="kbd">T</span> 打开聊天 · <span class="kbd">Esc</span> 暂停 / 关闭输入框 · <span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span><span class="kbd">4</span> 发送表情（👍😂💀🔥）· <span class="kbd">Q</span> 标点提示 · <span class="kbd">R</span> 结算界面返回主菜单</div>
+      <h3>核心机制</h3>
+      <div class="helpCard"><b>蓄力跳</b>：站在地面长按跳跃键，头顶出现蓄力条，越满跳得越高；满蓄力会触发「完美跳」。</div>
+      <div class="helpCard"><b>二段跳</b>：空中再按一次跳跃键可二段跳；踩到弹簧板会刷新二段跳机会。</div>
+      <div class="helpCard"><b>冲刺</b>：短距离高速位移，冲刺中撞击对手会造成击退，是抢位与逃生的关键。</div>
+      <div class="helpCard"><b>踩头</b>：从高处落到对手头上可以把他踩飞，注意别被别人踩。</div>
+      <div class="helpCard"><b>连击</b>：1.5 秒内连续命中会叠加连击数（角色旁显示 xN）。</div>
+      <div class="helpCard"><b>连杀</b>：3 秒内连续击杀会触发「双杀 / 三杀 / 四杀 / 五杀 / 超神」全屏播报。</div>
+      <div class="helpCard"><b>狂暴模式</b>：生命低于 30% 自动进入狂暴，移速 +20%、子弹伤害 +50%，全身红光。</div>
+      <div class="helpCard"><b>触屏模式</b>：主菜单点「📱 触屏」会显示虚拟按钮，适合手机 / 平板。</div>
+    `;
+
+    if (tab === 'mode') return `
+      <h3>七种游戏模式</h3>
+      <div class="helpCard"><b>🏁 竞速</b> —— 默认模式。所有人从起点跑到终点，按到达顺序得分（120 / 80 / 45 / 20），全员到达后进入下一关。可选 15 / 25 / 40 / 60 关。每 10 关换一种地形主题：<b>基础 → 冰面 → 弹簧 → 崩塌 → 移动 → 混合 → 攀爬 → 极限</b>。</div>
+      <div class="helpCard"><b>⚔️ 死斗</b> —— 在竞技场里互相射击，<b>先拿到 5 次击杀</b>的人获胜。</div>
+      <div class="helpCard"><b>🎯 占点</b> —— 中央有紫色光环区域，站在里面会持续累计时间，<b>先累计 30 秒</b>的人获胜。</div>
+      <div class="helpCard"><b>💰 收集</b> —— 场上散落金币，<b>先收集 10 枚</b>的人获胜，金币被吃后会在别处重生。</div>
+      <div class="helpCard"><b>🚩 夺旗</b> —— 双方各有一面旗，把对方旗子搬回自己基地 <b>2 次</b>即获胜；拿旗时被击杀，旗子会掉在原地。</div>
+      <div class="helpCard"><b>👹 大乱斗</b> —— 怪物不断刷新，<b>累计击杀 20 只</b>怪物的人获胜。</div>
+      <div class="helpCard"><b>🔥 生存</b> —— 多人时活到最后者获胜；单人时撑满 90 秒即算通关。</div>
+      <h3>难度</h3>
+      <div class="helpCard">简单 / 普通 / 困难 / 地狱 / 混沌 / <span style="color:#ff1744">炼狱</span> —— 难度越高，玩家生命越少，而陷阱数量、转速、伤害、刷新速度全面上升。炼狱难度通关可解锁专属成就。</div>
+      <h3>人数</h3>
+      <div class="helpCard">支持 1~4 人本地同屏，也支持 2~4 人联机（创建 / 加入房间）。</div>
+    `;
+
+    if (tab === 'char') return `
+      <h3>八位角色（在开始界面为每位玩家挑选）</h3>
+      ${CHARS.map(c => `<div class="helpCard"><b>${c.emoji} ${c.name}</b> · 技能 <span style="color:${c.color}">${c.skill}</span>（冷却 ${c.skillCd}s）<div style="font-size:11.5px;color:#7d90ab;margin-top:3px">${mulDesc(c.mul)}</div></div>`).join('')}
+      <h3>技能详解</h3>
+      <div class="helpCard">🥷 <b>瞬影突袭</b>：向前瞬移一段距离并短暂无敌，用来抢位或躲激光。</div>
+      <div class="helpCard">🧙 <b>弹幕冲击</b>：一次打出 5 发扇形弹幕，近距离伤害爆炸。</div>
+      <div class="helpCard">🛡️ <b>圣光护盾</b>：获得一层护盾，可抵挡一次任意伤害。</div>
+      <div class="helpCard">🤖 <b>火力全开</b>：3 秒内射速大幅提升。</div>
+      <div class="helpCard">🐱 <b>猫弹跳</b>：瞬间高跳，空中可再二段跳。</div>
+      <div class="helpCard">🐼 <b>地震术</b>：回复 30% 生命，并把附近对手震飞。</div>
+      <div class="helpCard">👽 <b>重力反转</b>：2 秒内几乎不受重力影响，可在空中滑翔。</div>
+      <div class="helpCard">👻 <b>虚化</b>：1.5 秒完全无敌，可穿过陷阱与弹幕。</div>
+    `;
+
+    if (tab === 'world') return `
+      <h3>🎁 场上道具（第 3 关起出现）</h3>
+      <div class="helpCard"><b style="color:#ffd54f">✦ 护盾</b> —— 抵挡一次伤害，被击中时消耗。</div>
+      <div class="helpCard"><b style="color:#a78bfa">■ 重物</b> —— 9 秒内几乎免疫击退，身板变得很硬。</div>
+      <div class="helpCard"><b style="color:#22d3ee">⚡ 加速</b> —— 9 秒内移速 +55%，冲刺抢位神器。</div>
+      <h3>🌦️ 天气（每关随机）</h3>
+      <div class="helpCard">☀️ <b>晴朗</b> —— 无影响。</div>
+      <div class="helpCard">🌧️ <b>下雨</b> —— 地面湿滑，摩擦力下降。</div>
+      <div class="helpCard">❄️ <b>下雪</b> —— 移动速度降低 25%。</div>
+      <div class="helpCard">🌫️ <b>起雾</b> —— 画面蒙雾，视线受阻。</div>
+      <h3>⚡ 随机事件（约每 15~35 秒触发一次）</h3>
+      <div class="helpCard"><b style="color:#4ade80">血雨</b> —— 全员回复 30% 生命。</div>
+      <div class="helpCard"><b style="color:#a78bfa">重力异常</b> —— 跳跃高度翻倍。</div>
+      <div class="helpCard"><b style="color:#ff5252">敌人来袭</b> —— 场上刷出 4 只怪物。</div>
+      <div class="helpCard"><b style="color:#4fc3f7">疾风来袭</b> —— 全员移动速度提升。</div>
+      <div class="helpCard"><b style="color:#7c3aed">黑暗降临</b> —— 视野受限，只能看清角色周围。</div>
+      <h3>☠️ 陷阱</h3>
+      <div class="helpCard">尖刺 · 旋转锯片 · 激光栅栏 · 追踪导弹 · 巡逻无人机 · 滚石 · 崩塌平台 · 冰面 · 弹簧板 · 移动平台 —— 关卡越靠后组合越凶残。</div>
+    `;
+
+    if (tab === 'rule') return `
+      <h3>得分规则</h3>
+      <div class="helpCard">竞速到达名次：<b>120 / 80 / 45 / 20</b> 分（单人固定 +100）</div>
+      <div class="helpCard">击杀对手 <b>+40</b> 分 · 击杀怪物 <b>+30</b> 分 · 拾取道具 <b>+5</b> 分 · 收集金币 <b>+20</b> 分</div>
+      <div class="helpCard">掉落深渊 <b>-40</b> 分 · 被击杀 <b>-25</b> 分</div>
+      <h3>MVP 评选</h3>
+      <div class="helpCard">每关结束与最终结算都会评选 MVP，综合「得分 + 击杀 ×100 + 通关速度奖励 − 死亡 / 掉落惩罚」，分数最高者获得 MVP 称号。</div>
+      <h3>关卡与存档</h3>
+      <div class="helpCard">竞速模式每关结束自动保存进度，主菜单点「继续游戏」可从上次关卡接着打。</div>
+      <div class="helpCard">通关全部关卡后成绩会写入本地排行榜（前 10 名）。</div>
+      <div class="helpCard">每关都会记录你的最快用时，HUD 右上角会显示本关最佳成绩。</div>
+      <h3>联机</h3>
+      <div class="helpCard">「创建房间」会生成 6 位房间码，把房间码发给朋友即可加入。房主点「开始游戏」后所有玩家同时进入。游戏中可按 <span class="kbd">T</span> 聊天、发表情、标点。</div>
+      <h3>小提示</h3>
+      <div class="helpCard">四个人的键位互不干扰，四个人挤在一个键盘上完全可行。</div>
+      <div class="helpCard">按 <span class="kbd">Esc</span> 暂停后可以「重开本关」，卡住了就重来。</div>
+    `;
+
+    if (tab === 'ach') {
+      const un = Achievements.count(), tot = Achievements.defs.length;
+      return `<h3>成就进度：${un} / ${tot}</h3>` +
+        Achievements.defs.map(d => {
+          const got = !!Achievements.unlocked[d.id];
+          return `<div class="helpCard" style="${got ? '' : 'opacity:.45'}"><b>${got ? '🏆' : '🔒'} ${d.name}</b><div style="font-size:11.5px;color:#7d90ab;margin-top:2px">${d.desc}</div></div>`;
+        }).join('');
+    }
+
+    if (tab === 'set') return `
+      <h3>画面与操作</h3>
+      <div class="setRow"><div><div class="st">屏幕震动</div><div class="sd">爆炸、受击、连杀时的镜头抖动</div></div><button class="switch" data-set="shake"></button></div>
+      <div class="setRow"><div><div class="st">伤害飘字</div><div class="sd">关闭可减少画面杂乱</div></div><button class="switch" data-set="dmgText"></button></div>
+      <div class="setRow"><div><div class="st">小地图</div><div class="sd">左上角显示全局位置与视野范围</div></div><button class="switch" data-set="minimap"></button></div>
+      <div class="setRow"><div><div class="st">粒子画质</div><div class="sd">低配设备建议调低，可明显提升帧率</div></div>
+        <div class="btns" style="max-width:200px">
+          <button data-q="0">低</button><button data-q="1">中</button><button data-q="2">高</button>
+        </div>
+      </div>
+      <h3>数据</h3>
+      <div class="setRow"><div><div class="st">清除最佳时间记录</div><div class="sd">仅清除每关最快通关记录</div></div><button class="smallBtn" id="clearBestBtn">清 除</button></div>
+      <div class="helpCard" style="margin-top:12px">设置会立即生效并自动保存在本地。</div>
+    `;
+
+    return '';
+  }
+};
 
 /* ═══ 输入 ═══ */
 addEventListener('keydown', e => {
@@ -884,6 +1183,7 @@ addEventListener('keydown', e => {
     else if (e.code === 'KeyQ') sendPing();
   }
   if (e.code === 'Escape') {
+    if (document.getElementById('helpModal').style.display === 'flex') { HelpModal.hide(); return; }
     if (document.getElementById('gameChatInputWrap').style.display !== 'none') { closeChat(); return; }
     if (state === 'playing' && !paused) togglePause();
     else if (paused) togglePause();
@@ -969,13 +1269,28 @@ document.getElementById('statsBtn').onclick = () => {
   const lines = [`总局数：${st.games}    通关：${st.wins}`, `累计时长：${(st.totalTime/60).toFixed(1)} 分钟`,
     `最佳单关：${st.bestTime ? st.bestTime.toFixed(2)+'s' : '--'}`,
     `表情发送：${st.emoteCount || 0} 次   技能使用：${st.skillCount || 0} 次`,
+    `狂暴击杀：${st.rageKills || 0} 次`,
     `成就：${u} / ${total}`, '', '已解锁成就：',
     ...Achievements.defs.filter(d => Achievements.unlocked[d.id]).map(d => '  🏆 ' + d.name)];
   alert(lines.join('\n'));
 };
+document.getElementById('boardBtn').onclick = () => {
+  const lines = ['🏆 本地排行榜（前 10 名）', '', ...Leaderboard.render(), '',
+    '─'.repeat(30), '达成条件：通关全部关卡'];
+  alert(lines.join('\n'));
+};
+document.getElementById('helpBtn').onclick = () => { S.coin(); HelpModal.show(); };
 document.getElementById('resumeBtn').onclick = () => togglePause();
 document.getElementById('restartBtn').onclick = () => { togglePause(); startGame(); };
 document.getElementById('quitBtn').onclick = () => { togglePause(); backToMenu(); };
+document.getElementById('retryBtn').onclick = () => {
+  if (Net.role === 'client') { alert('联机模式下由房主控制关卡'); return; }
+  togglePause();
+  loadLevel(li);
+  state = 'playing';
+  levelTime = 0;
+  finishCount = 0;
+};
 
 function togglePause() {
   if (state !== 'playing' && state !== 'levelend') return;
@@ -1016,7 +1331,7 @@ function buildUI() {
   checkCharAchievement();
 }
 
-/* ═══ P2P 联机 ═══ */
+/* ═══ P2P ═══ */
 const Net = {
   peer:null, conns:[], hostConn:null, role:null, code:null, myId:0, active:false,
   remIn:{}, lastBC:0, lastIn:0, onStart:null,
@@ -1140,6 +1455,9 @@ const Net = {
     this.lastBC = now;
     const sd = {
       mode:gameMode, li, lt:Math.round(levelTime*10)/10, hostState:state,
+      weather: weather.type,
+      event: activeEvent ? activeEvent.type : null,
+      eventTimer: activeEvent ? Math.round(activeEvent.timer * 10) / 10 : 0,
       ps: players.map(p => ({
         id:p.id, x:Math.round(p.x), y:Math.round(p.y),
         hp:p.hp, maxHp:p.maxHp, alive:p.alive, finished:p.finished,
@@ -1152,7 +1470,8 @@ const Net = {
         shield:p.shield, heavy:p.heavy > 0, speedBoost:p.speedBoost > 0,
         charging:p.charging, chargeT:p.chargeTime,
         skillCd:Math.round((p.skillCd || 0) * 10) / 10,
-        skillActive:p.skillActive || 0
+        skillActive:p.skillActive || 0,
+        rage:p.rage || false
       })),
       bs: bullets.slice(0, 40).map(b => ({ x:Math.round(b.x), y:Math.round(b.y), vx:Math.round(b.vx), vy:Math.round(b.vy), r:b.r, color:b.color, ownerId:b.owner.id })),
       ebs: enemyBullets.slice(0, 30).map(b => ({ x:Math.round(b.x), y:Math.round(b.y), vx:Math.round(b.vx), vy:Math.round(b.vy), r:b.r })),
@@ -1198,7 +1517,7 @@ const Net = {
   }
 };
 
-/* ═══ 表情 / 标记 ═══ */
+/* ═══ 表情/标记 ═══ */
 function sendEmote(idx) {
   const emoji = EMOTES[idx];
   if (!emoji) return;
@@ -1249,6 +1568,16 @@ function applyInterpolatedState() {
   const sb = b.data;
   if (sb.mode) gameMode = sb.mode;
   if (sb.ms) modeState = Object.assign(modeState, sb.ms);
+  if (sb.weather) weather = { type: sb.weather, timer:0, intensity:1 };
+  if (sb.event) {
+    if (!activeEvent || activeEvent.type !== sb.event) {
+      activeEvent = { type: sb.event, timer: sb.eventTimer || 12 };
+    } else {
+      activeEvent.timer = sb.eventTimer || activeEvent.timer;
+    }
+  } else if (activeEvent) {
+    activeEvent = null;
+  }
   const prevLi = li;
   li = sb.li; levelTime = sb.lt;
   if (Net.role === 'client' && Net.active && li !== prevLi) {
@@ -1287,6 +1616,7 @@ function applyInterpolatedState() {
       p.combo = pb.combo || 0;
       p.skillCd = pb.skillCd || 0;
       p.skillActive = pb.skillActive || 0;
+      p.rage = pb.rage || false;
       p._srv = true;
       continue;
     }
@@ -1484,6 +1814,35 @@ function fireSkill(p) {
   if (Achievements.stats.skillCount >= 30) Achievements.unlock('skillmaster');
 }
 
+/* ═══ 随机事件 ═══ */
+function triggerRandomEvent() {
+  const evts = ['bloodrain', 'lowgrav', 'enemywave', 'speedburst', 'darkness'];
+  const type = evts[Math.floor(Math.random() * evts.length)];
+  activeEvent = { type, timer: 12 };
+  const banner = {
+    bloodrain: { text:'血雨', subText:'天降甘露，回复生命', color:'#4ade80', accent:'#22c55e' },
+    lowgrav:   { text:'重力异常', subText:'跳跃力增强', color:'#a78bfa', accent:'#8b5cf6' },
+    enemywave: { text:'敌人来袭', subText:'小心怪物袭击', color:'#ff5252', accent:'#ff1744' },
+    speedburst:{ text:'疾风来袭', subText:'全员加速', color:'#4fc3f7', accent:'#0ea5e9' },
+    darkness:  { text:'黑暗降临', subText:'视野受限', color:'#7c3aed', accent:'#5b21b6' }
+  }[type];
+  if (banner) {
+    screenBanners.push({ ...banner, life:2.5, maxLife:2.5 });
+  }
+  if (type === 'bloodrain') {
+    for (const p of players) {
+      if (p.alive) {
+        p.hp = Math.min(p.maxHp, p.hp + Math.round(p.maxHp * 0.3));
+        spawnP(p.x+p.w/2, p.y+p.h/2, 20, '#4ade80', 300, 0.7, 200);
+      }
+    }
+  } else if (type === 'enemywave') {
+    for (let k = 0; k < 4; k++) spawnMonster();
+  }
+  S.event();
+  shake = Math.max(shake, 8);
+}
+
 /* ═══ 游戏生命周期 ═══ */
 function startGame() {
   if (Net.active && Net.role === 'host') {
@@ -1542,6 +1901,7 @@ function initGame(resume) {
       mul, streak:0, streakTimer:0, lastKillTime:-99,
       combo:0, comboTimer:0, hitCount:0,
       skillCd:0, skillActive:0,
+      rage:false,
       levelHits:0, levelFell:0, _targetX:0, _targetY:0
     });
   }
@@ -1551,6 +1911,8 @@ function initGame(resume) {
   mvpState.active = false;
   modeState = { mode:gameMode };
   netSnapshots.length = 0;
+  activeEvent = null;
+  nextEventTime = 15;
 
   let startLi = 0, startStats = null;
   if (resume && gameMode === 'race' && typeof resume.li === 'number') {
@@ -1616,8 +1978,38 @@ function loadLevel(i) {
     color:ITEM_DEFS[it.type].color, phase:Math.random()*6.28
   }));
   level = { name:def.name, plats, haz, items, goal:def.goal, def };
+
+  // ★ 随机天气
+  if (gameMode === 'race' && li === 0) {
+    weather = { type:'clear', timer:0, intensity:1 };
+  } else {
+    const w = WEATHERS[Math.floor(Math.random() * WEATHERS.length)];
+    weather = { type:w, timer:0, intensity: 0.7 + Math.random()*0.6 };
+    if (w !== 'clear') {
+      Achievements.stats.seenWeathers = Achievements.stats.seenWeathers || {};
+      Achievements.stats.seenWeathers[w] = true;
+      if (['rain','snow','fog'].every(k => Achievements.stats.seenWeathers[k])) {
+        Achievements.unlock('surviveWeather');
+      }
+      Achievements.save();
+      setTimeout(() => {
+        const names = { rain:'下雨了', snow:'下雪了', fog:'起雾了' };
+        const subs = { rain:'地面湿滑', snow:'移动变慢', fog:'视野受限' };
+        if (names[w]) {
+          screenBanners.push({
+            text: names[w], subText: subs[w],
+            color:'#8fd3ff', accent:'#4fc3f7',
+            life:2.5, maxLife:2.5
+          });
+        }
+      }, 300);
+    }
+  }
+
   levelTime = 0; finishCount = 0;
   particles = []; floats = []; bullets = []; enemyBullets = []; missiles = [];
+  activeEvent = null;
+  nextEventTime = 15;
 
   const n = players.length;
   for (let k = 0; k < n; k++) {
@@ -1638,6 +2030,7 @@ function loadLevel(i) {
     p.streak = 0; p.streakTimer = 0;
     p.combo = 0; p.comboTimer = 0; p.hitCount = 0;
     p.skillCd = 0; p.skillActive = 0;
+    p.rage = false;
     p.levelHits = 0; p.levelFell = 0;
     if (gameMode === 'collect') p.coins = 0;
     if (gameMode === 'koth') p.kothTime = 0;
@@ -1665,6 +2058,7 @@ function backToMenu() {
   state = 'menu';
   paused = false;
   netSnapshots.length = 0;
+  activeEvent = null;
   document.getElementById('pauseMenu').style.display = 'none';
   document.getElementById('menu').style.display = 'flex';
   BGM.play('menu');
@@ -1693,15 +2087,19 @@ function rr(c, x, y, w, h, rad) {
   c.closePath();
 }
 function spawnP(x, y, n, c, sp, lf, g = 1200) {
+  n = Math.max(1, Math.round(n * (QUALITY_MUL[Settings.data.quality] || 1)));
   for (let i = 0; i < n; i++) {
     const a = Math.random()*Math.PI*2;
     const s = sp*(0.25 + Math.random()*0.75);
     particles.push({ x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s-70, life:lf*(0.6+Math.random()*0.6), maxLife:lf, color:c, size:2.5+Math.random()*4, gravity:g });
   }
 }
-function addFloat(x, y, t, c) { floats.push({ x, y, text:t, color:c, life:1.1, maxLife:1.1, vy:-60 }); }
+function addFloat(x, y, t, c) {
+  if (!Settings.data.dmgText && /^-/.test(t)) return;
+  floats.push({ x, y, text:t, color:c, life:1.1, maxLife:1.1, vy:-60 });
+}
 
-/* ═══ 击杀 / 连杀 ═══ */
+/* ═══ 击杀/连杀 ═══ */
 function registerKill(killer, victim) {
   if (!killer || killer === victim) return;
   const now = levelTime;
@@ -1711,6 +2109,11 @@ function registerKill(killer, victim) {
   else killer.streak = 1;
   killer.lastKillTime = now;
   killer.streakTimer = 3.0;
+  if (killer.rage) {
+    Achievements.stats.rageKills = (Achievements.stats.rageKills || 0) + 1;
+    if (Achievements.stats.rageKills >= 3) Achievements.unlock('ragequit');
+    Achievements.save();
+  }
   killFeed.push({ killerName:killer.name, killerColor:killer.color, victimName:victim.name, victimColor:victim.color, life:4.0, maxLife:4.0 });
   if (killFeed.length > 5) killFeed.shift();
   const texts = { 2:'双 杀!', 3:'三 杀!', 4:'四 杀!', 5:'五 杀!' };
@@ -1744,7 +2147,6 @@ function registerKill(killer, victim) {
 function updatePlayers(dt) { for (const p of players) updatePlayer(p, dt); resolvePC(); }
 
 function updatePlayer(p, dt) {
-  // 主机端：直接应用客户端上报的位置
   if (Net.role === 'host' && Net.active && p.id !== Net.myId && p._netIn) {
     const i = p._netIn;
     if (typeof i.myX === 'number') {
@@ -1766,7 +2168,6 @@ function updatePlayer(p, dt) {
     }
     return;
   }
-  // 客户端：远程玩家插值
   if (Net.role === 'client' && Net.active && p.id !== Net.myId) {
     if (p._targetX !== undefined) {
       const rate = 1 - Math.pow(0.0005, dt);
@@ -1785,7 +2186,7 @@ function updatePlayer(p, dt) {
       p.alive = true; p.x = p.spawn.x; p.y = p.spawn.y;
       p.vx = 0; p.vy = 0; p.dashing = 0; p.charging = false; p.chargeTime = 0;
       p.invuln = 0.7; p.canDJ = false; p.hp = p.maxHp;
-      p.combo = 0; p.comboTimer = 0; p.skillCd = 0;
+      p.combo = 0; p.comboTimer = 0; p.skillCd = 0; p.rage = false;
       spawnP(p.x+p.w/2, p.y+p.h/2, 16, p.color, 220, 0.6);
     }
     return;
@@ -1825,9 +2226,7 @@ function updatePlayer(p, dt) {
   if (dir !== 0 && p.dashing <= 0) p.facing = dir;
   const isIce = (p.gp && p.gp.active && p.gp.type === 'ice');
 
-  // 主动技能
   if (sP && p.skillCd <= 0) fireSkill(p);
-  // 火力全开
   const atkMul = (p.skillActive > 0 && p.character === 'robot') ? 0.4 : 1;
   if (aP && p.atkCd <= 0 && p.dashing <= 0) {
     p.atkCd = ACD * (mul.ratk || 1) * atkMul;
@@ -1871,7 +2270,11 @@ function updatePlayer(p, dt) {
     if (p.trailT <= 0) { p.trailT = 0.02; spawnP(p.x+p.w/2, p.y+p.h/2, 2, p.color, 60, 0.3, 0); }
   } else if (!p.charging) {
     const acc = ACC * (isIce ? 0.18 : 1);
-    const mv = MSPD * (mul.spd || 1) * (p.speedBoost > 0 ? 1.55 : 1) * (isIce ? 1.2 : 1);
+    let weatherMul = 1;
+    if (weather.type === 'snow') weatherMul = 0.75;
+    if (weather.type === 'rain' && p.onGround) weatherMul = 0.9;
+    let mv = MSPD * (mul.spd || 1) * (p.speedBoost > 0 ? 1.55 : 1) * (isIce ? 1.2 : 1) * (p.rage ? 1.2 : 1) * weatherMul;
+    if (activeEvent && activeEvent.type === 'speedburst') mv *= 1.3;
     if (dir !== 0) { p.vx += dir * acc * dt; p.vx = clamp(p.vx, -mv, mv); }
     else {
       if (isIce) p.vx *= Math.pow(0.42, dt);
@@ -1887,7 +2290,8 @@ function updatePlayer(p, dt) {
     spawnP(p.x+p.w/2, p.y+p.h/2, 14, p.color, 260, 0.45, 0);
     S.dash();
   }
-  const gravMul = (p.skillActive > 0 && p.character === 'alien') ? 0.15 : 1;
+  let gravMul = (p.skillActive > 0 && p.character === 'alien') ? 0.15 : 1;
+  if (activeEvent && activeEvent.type === 'lowgrav') gravMul *= 0.5;
   if (p.dashing > 0) p.vy += GRAV * 0.1 * dt * gravMul;
   else p.vy += GRAV * dt * gravMul;
   if (p.vy > 1600) p.vy = 1600;
@@ -1906,6 +2310,18 @@ function updatePlayer(p, dt) {
       }
     }
   }
+
+  // ★ 狂暴模式
+  const hpRatio = p.hp / p.maxHp;
+  const wasRage = p.rage || false;
+  p.rage = hpRatio < 0.3 && p.alive;
+  if (p.rage && !wasRage) {
+    spawnP(p.x+p.w/2, p.y+p.h/2, 30, '#ff1744', 400, 0.8, 200);
+    addFloat(p.x+p.w/2, p.y-30, '狂暴模式!', '#ff1744');
+    shake = Math.max(shake, 10);
+    S.rage();
+  }
+
   if (Net.role !== 'client' && gameMode === 'race' && !p.finished && level.goal && rect(p, level.goal)) {
     p.finished = true; finishCount++;
     p.finishOrder = finishCount; p.finishTime = levelTime;
@@ -2052,7 +2468,7 @@ function killP(p, reason, src) {
 function fireBullet(p) {
   S.shoot();
   const cx = p.x+p.w/2, cy = p.y+p.h/2, f = p.facing;
-  bullets.push({ x: cx+f*30, y: cy, vx:f*BSPD, vy:0, r:10, dmg: DIFF.atk * (p.mul.atk || 1), owner: p, life:BLIFE, maxLife:BLIFE, color:p.color });
+  bullets.push({ x: cx+f*30, y: cy, vx:f*BSPD, vy:0, r:10, dmg: DIFF.atk * (p.mul.atk || 1) * (p.rage ? 1.5 : 1), owner: p, life:BLIFE, maxLife:BLIFE, color:p.color });
   spawnP(cx+f*34, cy, 8, p.color, 200, 0.22, 0);
   p.vx -= f*40;
 }
@@ -2111,7 +2527,6 @@ function updateBullets(dt) {
 }
 
 function hitBullet(b, t) {
-  // 连击计数
   addCombo(b.owner);
   if (t.heavy > 0) {
     const dmg = b.dmg * 0.35;
@@ -2242,11 +2657,9 @@ function updateHaz(dt) {
         }
       }
     } else if (h.type === 'boulder' && Net.role !== 'client') {
-      // 滚石：受重力下落
       if (h.vy === undefined) h.vy = 0;
       h.vy += 400 * dt;
       h.y += h.vy * dt;
-      // 落地反弹消失
       if (h.y > 1200) {
         h.y = -100 - Math.random()*200;
         h.vy = 0;
@@ -2363,11 +2776,16 @@ function updateModeLogic(dt) {
   }
   if (gameMode === 'survive') {
     if (levelTime > 180) Achievements.unlock('survivor');
-    const alive = players.filter(p => p.alive).length;
-    if (alive <= 1) {
+    if (nPlayers > 1) {
+      const alive = players.filter(p => p.alive).length;
+      if (alive <= 1) {
+        state = 'gameover';
+        const w = players.find(p => p.alive);
+        modeState.winner = w ? w.id : -1;
+      }
+    } else if (levelTime >= 90) {
       state = 'gameover';
-      const w = players.find(p => p.alive);
-      modeState.winner = w ? w.id : -1;
+      modeState.winner = players[0] ? players[0].id : -1;
     }
   }
 }
@@ -2434,6 +2852,22 @@ function update(dt) {
 
     if (Net.role === 'client' && Net.active) applyInterpolatedState();
 
+    // 随机事件（主机端）
+    if (Net.role !== 'client') {
+      if (activeEvent) {
+        activeEvent.timer -= dt;
+        if (activeEvent.timer <= 0) {
+          activeEvent = null;
+          nextEventTime = 20 + Math.random() * 15;
+        }
+      } else {
+        nextEventTime -= dt;
+        if (nextEventTime <= 0) {
+          triggerRandomEvent();
+        }
+      }
+    }
+
     updatePlats(dt);
     updateHaz(dt);
     updatePlayers(dt);
@@ -2492,6 +2926,14 @@ function update(dt) {
 
     if (Net.role !== 'client' && gameMode === 'race' && players.length > 0 && players.every(p => p.finished)) {
       state = 'levelend'; transT = 2.4; S.clear();
+      // ★ 记录本关最佳时间
+      const finishers = players.filter(p => p.finished && p.finishTime > 0);
+      if (finishers.length) {
+        const bestT = Math.min(...finishers.map(p => p.finishTime));
+        if (BestTimes.submit(bestT)) {
+          screenBanners.push({ text:'新 纪 录 !', subText:`${bestT.toFixed(2)} 秒`, color:'#ffe082', accent:'#ffb300', life:2.6, maxLife:2.6 });
+        }
+      }
       const mvp = calculateMVP();
       if (mvp) {
         mvpState = {
@@ -2522,6 +2964,16 @@ function update(dt) {
           Achievements.unlock('firstWin');
           if (totalTime < (Achievements.stats.bestTime || Infinity)) Achievements.stats.bestTime = totalTime;
           Achievements.save();
+          // 记录排行榜
+          for (const p of players) {
+            if (p.score > 0) {
+              Leaderboard.add({
+                name: p.name, score: p.score,
+                mode: gameMode, diff: DIFF.name,
+                time: Date.now()
+              });
+            }
+          }
           const mvp = calculateMVP();
           if (mvp) {
             mvpState = {
@@ -2575,8 +3027,9 @@ function render(dt) {
   ctx.fillStyle = bg; ctx.fillRect(0, 0, VW, VH);
   if (state === 'menu') return;
 
-  const shakeX = (Math.random() - 0.5) * shake;
-  const shakeY = (Math.random() - 0.5) * shake;
+  const shakeAmt = Settings.data.shake ? shake : 0;
+  const shakeX = (Math.random() - 0.5) * shakeAmt;
+  const shakeY = (Math.random() - 0.5) * shakeAmt;
   const sx = VW/2 - camera.x * currentScale + shakeX;
   const sy = VH/2 - camera.y * currentScale + shakeY;
 
@@ -2588,18 +3041,133 @@ function render(dt) {
   ctx.rect(cx0, cy0, viewW + 400, viewH + 400);
   ctx.clip();
   drawWorld();
+  drawDarkness();
   ctx.restore();
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   drawHUD();
+  drawMinimap();
 
   if (state === 'levelend') drawLevelEnd();
   if (state === 'gameover') drawGameOver();
   if (mvpState.active) drawMVP(dt);
 }
 
+/* ★ 小地图 */
+function drawMinimap() {
+  if (!Settings.data.minimap || !level) return;
+  if (state !== 'playing' && state !== 'levelend') return;
+  const mw = 170, mh = Math.round(mw * WH / WW);
+  const mx = 14, my = 14;
+  const kx = mw / WW, ky = mh / WH;
+  ctx.save();
+  rr(ctx, mx, my, mw, mh, 7);
+  ctx.fillStyle = 'rgba(8,13,22,0.78)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(79,195,247,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // 视野范围
+  const vx = mx + (camera.x - viewW/2) * kx;
+  const vy = my + (camera.y - viewH/2) * ky;
+  ctx.fillStyle = 'rgba(79,195,247,0.10)';
+  ctx.fillRect(vx, vy, viewW*kx, viewH*ky);
+
+  // 终点
+  if (level.goal) {
+    ctx.fillStyle = 'rgba(255,213,79,0.95)';
+    ctx.fillRect(mx + level.goal.x*kx, my + level.goal.y*ky,
+      Math.max(2.5, level.goal.w*kx), Math.max(2.5, level.goal.h*ky));
+  }
+
+  // 占点区
+  if (gameMode === 'koth' && modeState.zone) {
+    ctx.beginPath();
+    ctx.arc(mx + modeState.zone.x*kx, my + modeState.zone.y*ky, Math.max(3, modeState.zone.r*kx), 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(167,139,250,0.5)'; ctx.fill();
+  }
+
+  // 玩家
+  for (const p of players) {
+    if (!p.alive) continue;
+    const px = mx + (p.x + p.w/2) * kx;
+    const py = my + clamp(p.y + p.h/2, 0, WH) * ky;
+    ctx.beginPath();
+    ctx.arc(px, py, 3.6, 0, Math.PI*2);
+    ctx.fillStyle = p.color; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.65)'; ctx.lineWidth = 1.2; ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawWeather() {
+  if (!weather || weather.type === 'clear') return;
+  const t = performance.now()/1000;
+  if (weather.type === 'rain') {
+    ctx.save();
+    ctx.strokeStyle = `rgba(150,200,255,${0.35 * weather.intensity})`;
+    ctx.lineWidth = 1.5;
+    const cx0 = camera.x - viewW/2;
+    for (let i = 0; i < 120; i++) {
+      const seed = i * 57;
+      const rx = cx0 + ((seed * 13 + t * 400) % viewW);
+      const ry = ((seed * 91 + t * 800) % viewH) + camera.y - viewH/2;
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.lineTo(rx - 4, ry + 12);
+      ctx.stroke();
+    }
+    ctx.restore();
+  } else if (weather.type === 'snow') {
+    ctx.save();
+    ctx.fillStyle = `rgba(255,255,255,${0.6 * weather.intensity})`;
+    const cx0 = camera.x - viewW/2;
+    for (let i = 0; i < 80; i++) {
+      const seed = i * 71;
+      const rx = cx0 + ((seed * 17 + t * 60) % viewW);
+      const ry = ((seed * 89 + t * 150) % viewH) + camera.y - viewH/2;
+      const r = 1.5 + Math.sin(t + seed) * 0.5;
+      ctx.beginPath();
+      ctx.arc(rx, ry, r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  } else if (weather.type === 'fog') {
+    ctx.save();
+    const g = ctx.createLinearGradient(0, camera.y - viewH/2, 0, camera.y + viewH/2);
+    g.addColorStop(0, `rgba(200,220,255,${0.25 * weather.intensity})`);
+    g.addColorStop(0.5, `rgba(200,220,255,${0.15 * weather.intensity})`);
+    g.addColorStop(1, `rgba(200,220,255,${0.25 * weather.intensity})`);
+    ctx.fillStyle = g;
+    ctx.fillRect(camera.x - viewW/2, camera.y - viewH/2, viewW, viewH);
+    ctx.restore();
+  }
+}
+
+function drawDarkness() {
+  if (!activeEvent || activeEvent.type !== 'darkness') return;
+  const a = Math.min(0.75, activeEvent.timer / 3 * 0.75);
+  ctx.save();
+  ctx.fillStyle = `rgba(0,0,0,${a})`;
+  ctx.fillRect(camera.x - viewW/2 - 300, camera.y - viewH/2 - 300, viewW + 600, viewH + 600);
+  ctx.globalCompositeOperation = 'destination-out';
+  for (const p of players) {
+    if (!p.alive) continue;
+    const g = ctx.createRadialGradient(p.x+p.w/2, p.y+p.h/2, 20, p.x+p.w/2, p.y+p.h/2, 200);
+    g.addColorStop(0, 'rgba(0,0,0,1)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(p.x+p.w/2, p.y+p.h/2, 200, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawWorld() {
   if (!level) return;
+  drawWeather();
   const camMinX = camera.x - viewW/2 - 250;
   const camMaxX = camera.x + viewW/2 + 250;
 
@@ -2762,47 +3330,24 @@ function drawWorld() {
 function drawBoulder(h) {
   ctx.save();
   ctx.translate(h.x, h.y);
-  // 阴影
   ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.beginPath();
-  ctx.arc(3, 5, h.r, 0, Math.PI*2);
-  ctx.fill();
-  // 主体
+  ctx.beginPath(); ctx.arc(3, 5, h.r, 0, Math.PI*2); ctx.fill();
   const g = ctx.createRadialGradient(-h.r*0.3, -h.r*0.3, 2, 0, 0, h.r);
-  g.addColorStop(0, '#a1887f');
-  g.addColorStop(0.7, '#5d4037');
-  g.addColorStop(1, '#2d1f18');
+  g.addColorStop(0, '#a1887f'); g.addColorStop(0.7, '#5d4037'); g.addColorStop(1, '#2d1f18');
   ctx.fillStyle = g;
-  ctx.beginPath();
-  ctx.arc(0, 0, h.r, 0, Math.PI*2);
-  ctx.fill();
-  ctx.strokeStyle = '#1a0f0a';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  // 高光
+  ctx.beginPath(); ctx.arc(0, 0, h.r, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#1a0f0a'; ctx.lineWidth = 2; ctx.stroke();
   ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.beginPath(); ctx.arc(-h.r*0.35, -h.r*0.4, h.r*0.25, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(-h.r*0.35, -h.r*0.4, h.r*0.25, 0, Math.PI*2);
-  ctx.fill();
-  // 裂缝
-  ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(-h.r*0.5, -h.r*0.2);
-  ctx.lineTo(-h.r*0.1, 0);
-  ctx.lineTo(h.r*0.2, -h.r*0.3);
-  ctx.moveTo(-h.r*0.2, h.r*0.5);
-  ctx.lineTo(h.r*0.1, h.r*0.2);
-  ctx.lineTo(h.r*0.4, h.r*0.5);
+  ctx.moveTo(-h.r*0.5, -h.r*0.2); ctx.lineTo(-h.r*0.1, 0); ctx.lineTo(h.r*0.2, -h.r*0.3);
+  ctx.moveTo(-h.r*0.2, h.r*0.5); ctx.lineTo(h.r*0.1, h.r*0.2); ctx.lineTo(h.r*0.4, h.r*0.5);
   ctx.stroke();
-  // 危险光晕
   ctx.save();
   ctx.globalAlpha = 0.4 + 0.3*Math.sin(performance.now()/200);
-  ctx.strokeStyle = '#ff5252';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(0, 0, h.r + 4, 0, Math.PI*2);
-  ctx.stroke();
+  ctx.strokeStyle = '#ff5252'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, 0, h.r + 4, 0, Math.PI*2); ctx.stroke();
   ctx.restore();
   ctx.restore();
 }
@@ -3154,7 +3699,17 @@ function drawPlayer(p) {
   if (p.finished) ctx.globalAlpha = 0.42;
   if (p.invuln > 0) ctx.globalAlpha *= 0.55 + 0.45*Math.sin(performance.now()/50);
 
-  // 技能激活特效
+  if (p.rage) {
+    ctx.save();
+    ctx.globalAlpha = 0.5 + 0.3*Math.sin(performance.now()/80);
+    ctx.shadowColor = '#ff1744'; ctx.shadowBlur = 40;
+    ctx.strokeStyle = '#ff1744'; ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(p.x+p.w/2, p.y+p.h/2, p.w*1.5, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   if (p.skillActive > 0) {
     ctx.save();
     const col = p.character === 'robot' ? '#ff5252' : (p.character === 'alien' ? '#81c784' : '#d8b4fe');
@@ -3257,7 +3812,6 @@ function drawPlayer(p) {
   ctx.stroke();
   ctx.restore();
 
-  // 技能冷却环
   if (p.skillCd > 0) {
     const cdef0 = CHARS.find(c => c.id === p.character) || CHARS[0];
     const cdMax = (cdef0.skillCd || 5) * (p.mul && p.mul.cd ? p.mul.cd : 1);
@@ -3291,7 +3845,6 @@ function drawPlayer(p) {
   ctx.fillStyle = p.color;
   ctx.fillText(p.name, p.x + p.w/2, p.y - 11);
 
-  // 连击数
   if (p.combo >= 2) {
     ctx.font = 'bold 14px system-ui';
     ctx.fillStyle = '#ffd54f';
@@ -3320,22 +3873,47 @@ function drawHUD() {
   else ctx.fillText(`${modeNames[gameMode]} 模式`, VW/2, 16);
   ctx.shadowBlur = 0;
 
+  // 天气图标
+  const wIcons = { clear:'☀️', rain:'🌧️', snow:'❄️', fog:'🌫️' };
+  if (weather.type !== 'clear') {
+    ctx.font = '18px system-ui';
+    ctx.fillStyle = '#8fd3ff';
+    ctx.fillText(wIcons[weather.type] || '', VW/2 - 80, 16);
+  }
+  // 事件倒计时
+  if (activeEvent) {
+    ctx.font = 'bold 13px system-ui';
+    ctx.fillStyle = '#ffd54f';
+    ctx.fillText(`⚡ 事件: ${Math.ceil(activeEvent.timer)}s`, VW/2 + 90, 20);
+  }
+
   if (gameMode === 'dm') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#ff8a65'; ctx.fillText(`先达到 ${modeState.targetKills} 杀获胜`, VW/2, 42); }
   else if (gameMode === 'koth') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#a78bfa'; ctx.fillText(`守住中央区 ${modeState.targetScore} 秒获胜`, VW/2, 42); }
   else if (gameMode === 'collect') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#ffd54f'; ctx.fillText(`先收集 ${modeState.targetCoins} 金币获胜`, VW/2, 42); }
   else if (gameMode === 'ctf') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#ffd54f'; ctx.fillText(`先夺旗 ${modeState.targetScore} 次获胜`, VW/2, 42); }
   else if (gameMode === 'horde') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#ff8a65'; ctx.fillText(`击杀 ${modeState.targetKills} 个怪物获胜`, VW/2, 42); }
-  else if (gameMode === 'survive') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#ff5252'; ctx.fillText('活到最后获胜', VW/2, 42); }
+  else if (gameMode === 'survive') { ctx.font = 'bold 13px system-ui'; ctx.fillStyle = '#ff5252'; ctx.fillText(nPlayers > 1 ? '活到最后获胜' : '撑满 90 秒获胜', VW/2, 42); }
 
   ctx.textAlign = 'right';
   ctx.font = 'bold 18px system-ui';
   ctx.fillStyle = '#7d94b0';
   ctx.fillText(levelTime.toFixed(1) + 's', VW - 22, 18);
 
+  // ★ 本关最佳时间
+  if (gameMode === 'race') {
+    const bt = BestTimes.get();
+    if (bt !== undefined) {
+      ctx.font = 'bold 12px system-ui';
+      ctx.fillStyle = '#ffd54f';
+      ctx.fillText('最佳 ' + bt.toFixed(2) + 's', VW - 22, 40);
+    }
+  }
+
   if (nPlayers === 1) {
     ctx.font = 'bold 12px system-ui';
     ctx.fillStyle = '#5f7691';
-    ctx.fillText('累计 ' + totalTime.toFixed(1) + 's', VW - 22, 44);
+    const yy = (gameMode === 'race' && BestTimes.get() !== undefined) ? 60 : 44;
+    ctx.fillText('累计 ' + totalTime.toFixed(1) + 's', VW - 22, yy);
   }
 
   if (nPlayers >= 2 && (gameMode === 'dm' || gameMode === 'race')) {
@@ -3427,8 +4005,8 @@ function drawHUD() {
   for (const p of players) {
     rr(ctx, px, py, pw, ph, 9);
     ctx.fillStyle = 'rgba(10,16,26,0.85)'; ctx.fill();
-    ctx.strokeStyle = p.finished ? '#ffd54f' : 'rgba(255,255,255,0.15)';
-    ctx.lineWidth = p.finished ? 2.5 : 1.5; ctx.stroke();
+    ctx.strokeStyle = p.finished ? '#ffd54f' : (p.rage ? '#ff1744' : 'rgba(255,255,255,0.15)');
+    ctx.lineWidth = (p.finished || p.rage) ? 2.5 : 1.5; ctx.stroke();
     rr(ctx, px + 8, py + 10, 4, ph - 20, 2);
     ctx.fillStyle = p.color; ctx.fill();
 
@@ -3704,6 +4282,7 @@ function loadNamesInit() {
 
 loadNamesInit();
 Achievements.load();
+HelpModal.init();
 buildUI();
 updateContinueBtn();
 updateQuickStats();
